@@ -1,5 +1,5 @@
 import click
-from models import load_data
+from models import load_data, check_paths
 
 # Путь к файлам tasks.yaml и builds.yaml
 # Используем dict для дальнейшего удобства создания команд
@@ -7,6 +7,8 @@ PATH_TO_FILES = {
     'tasks': 'tasks.yaml',
     'builds': 'builds.yaml'
 }
+# Проверяем корректность пути к файлам
+check_paths(PATH_TO_FILES)
 # Загружаем данные из файлов в глобальные переменные
 TASKS, BUILDS = load_data(*PATH_TO_FILES.values())
 
@@ -17,13 +19,10 @@ def commands():
 
 
 @click.command('list')
-@click.argument('entity',
-                type=click.Choice(PATH_TO_FILES.keys()),
-                required=1,  # обязательный аргумент
-                )
+@click.argument('entity', type=click.Choice(PATH_TO_FILES.keys()), required=1)
 def list(entity: str):
     """
-    Prints the list of tasks or builds names loaded.
+    Prints the list of loaded task or build names.
 
     """
     if entity == 'tasks':
@@ -37,14 +36,8 @@ def list(entity: str):
 
 
 @click.command('get')
-@click.argument('entity',
-                type=click.Choice(['task', 'build']),
-                required=1,
-                )
-@click.argument('name',
-                type=str,
-                required=1,
-                )
+@click.argument('entity', type=click.Choice(['task', 'build']), required=1)
+@click.argument('name', type=str, required=1)
 def get(entity: str, name: str):
     """
     Prints detailed info about specific task or build.

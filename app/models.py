@@ -1,5 +1,6 @@
+import os
+import sys
 import yaml
-
 
 class Task:
     def __init__(self, name: str, dependencies: list[str]):
@@ -56,6 +57,7 @@ class Build:
 
 
 def load_data(path_to_tasks: str = 'tasks.yaml', path_to_builds: str = 'builds.yaml') -> tuple[list[Task], list[Build]]:
+    #check_paths({'tasks': path_to_tasks, 'builds': path_to_builds})
     tasks = []
     builds = []
     # Загружаем все tasks
@@ -77,3 +79,19 @@ def load_data(path_to_tasks: str = 'tasks.yaml', path_to_builds: str = 'builds.y
             builds.append(Build(build['name'], build_tasks))
 
     return tasks, builds
+
+
+def check_paths(paths):
+    try:
+        f = open(paths['tasks'])
+    except FileNotFoundError as e:
+        print('Path to tasks.yaml is wrong! Please specify path in main.py file.')
+        os.system('pause')
+        sys.exit()
+    try:
+        f = open(paths['builds'])
+    except FileNotFoundError as e:
+        print('Path to builds.yaml is wrong! Please specify path in main.py file.')
+        os.system('pause')
+        sys.exit()
+    return 0
